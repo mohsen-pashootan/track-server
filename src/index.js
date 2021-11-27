@@ -1,7 +1,18 @@
+require("./models/User.js");
 const express = require("express");
 const mongoose = require("mongoose");
+const authRoutes = require("./routes/authRoutes");
+const requireAuth = require("./middlewares/requireAuth");
 
 const app = express();
+
+app.use(express.json());
+app.use(
+  express.urlencoded({
+    extended: true,
+  })
+);
+app.use(authRoutes);
 
 const mongoUri =
   "mongodb+srv://mohsen-admin:mohsen-password@track-server-cluster.osiil.mongodb.net/track-server-cluster?retryWrites=true&w=majority";
@@ -18,8 +29,8 @@ mongoose.connection.on("error", (error) => {
   console.log("Error connecting to mongo", error);
 });
 
-app.get("/", (req, res) => {
-  res.send("Hi There");
+app.get("/", requireAuth, (req, res) => {
+  res.send(`Your email &+${req.user.email}`);
 });
 
 app.listen(3000, () => {
