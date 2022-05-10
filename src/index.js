@@ -1,7 +1,9 @@
-require("./models/User.js");
+require("./models/User");
+require("./models/Track");
 const express = require("express");
 const mongoose = require("mongoose");
 const authRoutes = require("./routes/authRoutes");
+const trackRoutes = require("./routes/trackRoutes");
 const requireAuth = require("./middlewares/requireAuth");
 
 const app = express();
@@ -13,6 +15,7 @@ app.use(
   })
 );
 app.use(authRoutes);
+app.use(trackRoutes);
 
 const mongoUri =
   "mongodb+srv://mohsen-admin:mohsen-password@track-server-cluster.osiil.mongodb.net/track-server-cluster?retryWrites=true&w=majority";
@@ -20,7 +23,6 @@ mongoose.connect(mongoUri, {
   useNewUrlParser: true,
   //   useCreateIndex: true, // Deprecated
 });
-
 mongoose.connection.on("connected", () => {
   console.log("Connected to mongo instance");
 });
